@@ -72,6 +72,9 @@ class KeywordHookComponent extends Object {
 					if(Configure::read('BcRequest.agent')) {
 						$param = Configure::read('BcRequest.agentPrefix').'/'.$param;
 					}
+					if(!$param || $param == 'smartphone/' || $param == 'mobile/') {
+						$param = $param . 'index';
+					}
 					$pageData = $PageModel->findByUrl('/' . $param, array(
 						'fields' => 'id'
 					));
