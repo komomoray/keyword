@@ -56,44 +56,37 @@ class KeywordHookComponent extends Object {
 				}
 			}
 
+			// 固定ページ表示画面で実行
 			if(empty($controller->params['prefix']) ||
-					$controller->params['prefix'] == 'smartphone' ||
-					$controller->params['prefix']) {
+				$controller->params['prefix'] == 'smartphone' ||
+				$controller->params['prefix'] == 'mobile') {
 
-				// 固定ページ表示画面で実行
 				if(!empty($controller->params['url']['url'])) {
 
 					$PageModel = ClassRegistry::init('Page.Pages');
-					$pageUrl = $controller->params['url']['url'];
-					// TODO prefix が smartphone と mobile の際の対応を考慮する
-					if(!empty($pageUrl)) {
-						if($pageUrl != '/') {
-							$pageUrl = '/' . $pageUrl;
-						} else {
-							$pageUrl = '/index';
-						}
-						// 日本語ページを考慮して decode する
-						$pageUrl = urldecode($pageUrl);
-						$pageData = $PageModel->find('first', array(
-							'conditions' => array(
-								'url' => $pageUrl
-							),
-							'fields' => 'id'
+					// 参考：/baser/views/helpers/bc_page.php：beforeRender()
+					$param = Configure::read('BcRequest.pureUrl');
+					if($param && preg_match('/\/$/is',$param)){
+						$param .= 'index';
+					}
+					if(Configure::read('BcRequest.agent')) {
+						$param = Configure::read('BcRequest.agentPrefix').'/'.$param;
+					}
+					$pageData = $PageModel->findByUrl('/' . $param, array(
+						'fields' => 'id'
+					));
+					if($pageData) {
+						$keyword = $this->KeywordModel->find('first', array(
+							'conditions' => array('Keyword.pages_id' => $pageData['Pages']['id'])
 						));
-						if($pageData) {
-							$keyword = $this->KeywordModel->find('first', array(
-								'conditions' => array('Keyword.pages_id' => $pageData['Pages']['id'])
-							));
-							if($keyword) {
-								$controller->viewVars['keywords'] = $keyword['Keyword']['keywords'];
-							}
+						if($keyword) {
+							$controller->viewVars['keywords'] = $keyword['Keyword']['keywords'];
 						}
 					}
 
 				}
 
 			}
-
 
 		}
 
