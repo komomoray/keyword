@@ -16,7 +16,7 @@ class KeywordHookComponent extends Object {
  * @access public
  */
 	var $registerHooks = array(
-		'beforeRender', 'afterPageAdd', 'afterPageEdit');
+		'startup', 'beforeRender', 'afterPageAdd', 'afterPageEdit');
 /**
  * キーワードモデル
  * 
@@ -35,6 +35,29 @@ class KeywordHookComponent extends Object {
 		$this->KeywordModel = ClassRegistry::init('Keyword.Keyword');
 	}
 /**
+ * startup
+ * 
+ * @param type $controller
+ * @return void
+ * @access public
+ */
+	function startup(&$controller) {
+
+		if($controller->name == 'Pages') {
+			if($controller->action == 'admin_edit') {
+				$association = array(
+					'Keyword' => array(
+						'className' => 'Keyword.Keyword',
+						'foreignKey' => 'pages_id'
+					)
+				);
+				$controller->Page->bindModel(array('hasOne' => $association));
+			}
+		}
+
+	}
+
+/**
  * beforeRender
  * 
  * @param Controller $controller 
@@ -45,22 +68,11 @@ class KeywordHookComponent extends Object {
 
 		if($controller->name == 'Pages') {
 
-			// 固定ページ編集画面で実行
-			if($controller->action == 'admin_edit') {
-				$data = $this->KeywordModel->findByPagesId($controller->data['Page']['id']);
-				if($data) {
-					$controller->data['Keyword'] = $data['Keyword'];
-				}
-			}
-
 			// 固定ページ表示画面で実行
-			if(empty($controller->params['prefix']) ||
-				$controller->params['prefix'] == 'smartphone' ||
-				$controller->params['prefix'] == 'mobile') {
+			if(empty($controller->params['prefix']) || $controller->params['prefix'] != 'admin') {
 
 				if(!empty($controller->params['url']['url'])) {
 
-					$PageModel = ClassRegistry::init('Page.Pages');
 					// 参考：/baser/views/helpers/bc_page.php：beforeRender()
 					$param = Configure::read('BcRequest.pureUrl');
 					if($param && preg_match('/\/$/is',$param)){
@@ -72,11 +84,11 @@ class KeywordHookComponent extends Object {
 					if(!$param || $param == 'smartphone/' || $param == 'mobile/') {
 						$param = $param . 'index';
 					}
-					$pageData = $PageModel->findByUrl('/' . $param, array(
+					$pageData = $controller->Page->findByUrl('/' . $param, array(
 						'fields' => 'id'
 					));
 					if($pageData) {
-						$keyword = $this->KeywordModel->findByPagesId($pageData['Pages']['id']);
+						$keyword = $this->KeywordModel->findByPagesId($pageData['Page']['id']);
 						if($keyword) {
 							$controller->viewVars['keywords'] = $keyword['Keyword']['keywords'];
 						}
