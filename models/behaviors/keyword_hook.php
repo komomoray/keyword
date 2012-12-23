@@ -30,7 +30,7 @@ class KeywordHookBehavior extends ModelBehavior {
 		// 固定ページ削除時、その固定ページが持つキーワード情報を削除する
 		if($model->alias == 'Page') {
 			$KeywordModel = ClassRegistry::init('Keyword.Keyword');
-			$data = $KeywordModel->find('first', array('conditions' => array('Keyword.pages_id' => $model->id)));
+			$data = $KeywordModel->findByPagesId($model->id);
 			if($data) {
 				if(!$KeywordModel->delete($data['Keyword']['id'])) {
 					$this->log('ID:' . $data['Keyword']['id'] . 'のキーワードの削除に失敗しました。');

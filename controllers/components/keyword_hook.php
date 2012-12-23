@@ -47,10 +47,7 @@ class KeywordHookComponent extends Object {
 
 			// 固定ページ編集画面で実行
 			if($controller->action == 'admin_edit') {
-				$conditions = array(
-					'Keyword.pages_id' => $controller->data['Page']['id']
-				);
-				$data = $this->KeywordModel->find('first', array('conditions' => $conditions));
+				$data = $this->KeywordModel->findByPagesId($controller->data['Page']['id']);
 				if($data) {
 					$controller->data['Keyword'] = $data['Keyword'];
 				}
@@ -79,9 +76,7 @@ class KeywordHookComponent extends Object {
 						'fields' => 'id'
 					));
 					if($pageData) {
-						$keyword = $this->KeywordModel->find('first', array(
-							'conditions' => array('Keyword.pages_id' => $pageData['Pages']['id'])
-						));
+						$keyword = $this->KeywordModel->findByPagesId($pageData['Pages']['id']);
 						if($keyword) {
 							$controller->viewVars['keywords'] = $keyword['Keyword']['keywords'];
 						}
@@ -105,17 +100,7 @@ class KeywordHookComponent extends Object {
 
 		// 固定ページ保存時にエラーがなければ保存処理を実行
 		if(empty($controller->Page->validationErrors)) {
-
-			$controller->data['Keyword']['pages_id'] = $controller->Page->getLastInsertId();
-			if(empty($controller->data['Keyword']['id'])) {
-				$this->KeywordModel->create($controller->data['Keyword']);
-			} else {
-				$this->KeywordModel->set($controller->data['Keyword']);
-			}
-			if(!$this->KeywordModel->save()) {
-				$this->log('キーワードの保存に失敗しました。');
-			}
-
+			$this->_dataSave($controller);
 		}
 
 	}
@@ -130,17 +115,33 @@ class KeywordHookComponent extends Object {
 
 		// 固定ページ保存時にエラーがなければ保存処理を実行
 		if(empty($controller->Page->validationErrors)) {
+			$this->_dataSave($controller);
+		}
 
+	}
+/**
+ * キーワード情報を保存する
+ * 
+ * @param Controller $controller 
+ * @return void
+ * @access private
+ */
+	function _dataSave($controller) {
+
+		if($controller->action == 'admin_add') {
+			$controller->data['Keyword']['pages_id'] = $controller->Page->getLastInsertId();
+		} else {
 			$controller->data['Keyword']['pages_id'] = $controller->Page->id;
-			if(empty($controller->data['Keyword']['id'])) {
-				$this->KeywordModel->create($controller->data['Keyword']);
-			} else {
-				$this->KeywordModel->set($controller->data['Keyword']);
-			}
-			if(!$this->KeywordModel->save()) {
-				$this->log('キーワードの保存に失敗しました。');
-			}
+		}
 
+		if(empty($controller->data['Keyword']['id'])) {
+			$this->KeywordModel->create($controller->data['Keyword']);
+		} else {
+			$this->KeywordModel->set($controller->data['Keyword']);
+		}
+
+		if(!$this->KeywordModel->save()) {
+			$this->log('キーワードの保存に失敗しました。');
 		}
 
 	}

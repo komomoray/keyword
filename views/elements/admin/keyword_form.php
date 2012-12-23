@@ -11,10 +11,10 @@
 ?>
 <br />
 <?php echo $bcForm->hidden('Keyword.id') ?>
-<?php echo $bcForm->label('Keyword.keywords', 'キーワード') ?>
+<small><?php echo $bcForm->label('Keyword.keywords', 'キーワード') ?></small>
 <?php echo $bcForm->error('Keyword.keywords') ?>
 <br />
 <?php echo $bcForm->input('Keyword.keywords', array(
-	'type' => 'textarea', 'cols' => 60, 'rows' => 2, 'maxlength' => 125,
+	'type' => 'textarea', 'cols' => 60, 'rows' => 1, 'maxlength' => 125,
 	'counter' => true
 	)) ?>
