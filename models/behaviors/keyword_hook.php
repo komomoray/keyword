@@ -2,7 +2,7 @@
 /**
  * [HookBehavior] keyword
  *
- * @copyright		Copyright 2012, materializing.
+ * @copyright		Copyright 2012 - 2013, materializing.
  * @link			http://www.materializing.net/
  * @author			arata
  * @package			keyword.models
@@ -25,7 +25,7 @@ class KeywordHookBehavior extends ModelBehavior {
  * @return void
  * @access public
  */
-	function afterDelete($model) {
+	function afterDelete(&$model) {
 
 		// 固定ページ削除時、その固定ページが持つキーワード情報を削除する
 		if($model->alias == 'Page') {

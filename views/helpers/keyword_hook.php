@@ -2,7 +2,7 @@
 /**
  * [HookHelper] keyword
  *
- * @copyright		Copyright 2012, materializing.
+ * @copyright		Copyright 2012 - 2013, materializing.
  * @link			http://www.materializing.net/
  * @author			arata
  * @package			keyword.views
@@ -19,7 +19,7 @@ class KeywordHookHelper extends AppHelper {
 /**
  * afterFormInput
  * 
- * @param string $form
+ * @param Object $form
  * @param string $fieldName
  * @param string $out
  * @return string 
