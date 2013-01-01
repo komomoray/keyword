@@ -15,6 +15,5 @@
 <?php echo $bcForm->error('Keyword.keywords') ?>
 <br />
 <?php echo $bcForm->input('Keyword.keywords', array(
-	'type' => 'textarea', 'cols' => 60, 'rows' => 1, 'maxlength' => 125,
-	'counter' => true
+	'type' => 'textarea', 'cols' => 60, 'rows' => 1, 'maxlength' => 125, 'counter' => true
 	)) ?>
