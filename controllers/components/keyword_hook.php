@@ -56,6 +56,24 @@ class KeywordHookComponent extends Object {
 				}
 			}
 
+			// Ajaxコピー処理時に実行
+			//   ・Ajax削除時は、内部的に Model->delete が呼ばれているため afterDelete で処理可能
+			if($controller->action == 'admin_ajax_copy') {
+				// 固定ページコピー保存時にエラーがなければ保存処理を実行
+				if(empty($controller->Page->validationErrors)) {
+					$keywordData = $this->KeywordModel->find('first', array(
+						'conditions' => array('Keyword.pages_id' => $controller->params['pass']['0'])));
+					$saveData = array();
+					if($keywordData) {
+						$saveData['Keyword']['keywords'] = $keywordData['Keyword']['keywords'];
+					}
+					$saveData['Keyword']['pages_id'] = $controller->viewVars['data']['Page']['id'];
+
+					$this->KeywordModel->create($saveData);
+					$this->KeywordModel->save($saveData, false);
+				}
+			}
+
 			// 固定ページ表示画面で実行
 			if(empty($controller->params['prefix']) ||
 				$controller->params['prefix'] == 'smartphone' ||
