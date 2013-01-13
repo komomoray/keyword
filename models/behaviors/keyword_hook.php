@@ -16,7 +16,7 @@ class KeywordHookBehavior extends ModelBehavior {
  * @access public
  */
 	var $registerHooks = array(
-			'Page'	=> array('afterDelete')
+			'Page'	=> array('afterDelete', 'beforeValidate')
 	);
 /**
  * afterDelete
@@ -37,6 +37,25 @@ class KeywordHookBehavior extends ModelBehavior {
 				}
 			}
 		}
+
+	}
+/**
+ * beforeValidate
+ * 
+ * @param Object $model
+ * @return boolean
+ * @access public
+ */
+	function beforeValidate($model) {
+
+		// 固定ページ保存の手前で Keyword モデルのデータに対して validation を行う
+		if($model->alias == 'Page') {
+			$KeywordModel = ClassRegistry::init('Keyword.Keyword');
+			$KeywordModel->set($model->data);
+			return $KeywordModel->validates();
+		}
+
+		return true;
 
 	}
 

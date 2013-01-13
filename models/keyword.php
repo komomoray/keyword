@@ -23,5 +23,19 @@ class Keyword extends BaserPluginAppModel {
  * @access public
  */
 	var $plugin = 'Keyword';
+/**
+ * バリデーション
+ *
+ * @var array
+ * @access public
+ */
+	var $validate = array(
+		'keywords' => array(
+			'maxLength' => array(
+				'rule'		=> array('maxLength', 255),
+				'message'	=> 'キーワードは255文字以内で入力してください。'
+			)
+		)
+	);
 
 }
