@@ -37,7 +37,7 @@ class KeywordHookComponent extends Object {
 /**
  * startup
  * 
- * @param type $controller
+ * @param Object $controller
  * @return void
  * @access public
  */
@@ -60,7 +60,7 @@ class KeywordHookComponent extends Object {
 /**
  * beforeRender
  * 
- * @param Controller $controller 
+ * @param Object $controller 
  * @return void
  * @access public
  */
@@ -88,7 +88,7 @@ class KeywordHookComponent extends Object {
 						'fields' => 'id'
 					));
 					if($pageData) {
-						$keyword = $this->KeywordModel->findByPagesId($pageData['Page']['id']);
+						$keyword = $this->KeywordModel->findByPagesId($pageData['Page']['id'], null, null, -1);
 						if($keyword) {
 							$controller->viewVars['keywords'] = $keyword['Keyword']['keywords'];
 						}
@@ -104,7 +104,9 @@ class KeywordHookComponent extends Object {
 				// 固定ページコピー保存時にエラーがなければ保存処理を実行
 				if(empty($controller->Page->validationErrors)) {
 					$keywordData = $this->KeywordModel->find('first', array(
-						'conditions' => array('Keyword.pages_id' => $controller->params['pass']['0'])));
+						'conditions' => array('Keyword.pages_id' => $controller->params['pass']['0']),
+						'recursive' => -1
+					));
 					$saveData = array();
 					if($keywordData) {
 						$saveData['Keyword']['keywords'] = $keywordData['Keyword']['keywords'];
@@ -112,7 +114,7 @@ class KeywordHookComponent extends Object {
 					$saveData['Keyword']['pages_id'] = $controller->viewVars['data']['Page']['id'];
 
 					$this->KeywordModel->create($saveData);
-					$this->KeywordModel->save($saveData, false);
+					$this->KeywordModel->save(null, false);
 				}
 			}
 
@@ -122,7 +124,7 @@ class KeywordHookComponent extends Object {
 /**
  * afterPageAdd
  *
- * @param Controller $controller
+ * @param Object $controller
  * @return void
  * @access public
  */
@@ -137,7 +139,7 @@ class KeywordHookComponent extends Object {
 /**
  * afterPageEdit
  *
- * @param Controller $controller
+ * @param Object $controller
  * @return void
  * @access public
  */
@@ -152,7 +154,7 @@ class KeywordHookComponent extends Object {
 /**
  * キーワード情報を保存する
  * 
- * @param Controller $controller 
+ * @param Object $controller 
  * @return void
  * @access private
  */
@@ -165,9 +167,9 @@ class KeywordHookComponent extends Object {
 		}
 
 		if(empty($controller->data['Keyword']['id'])) {
-			$this->KeywordModel->create($controller->data['Keyword']);
+			$this->KeywordModel->create($controller->data);
 		} else {
-			$this->KeywordModel->set($controller->data['Keyword']);
+			$this->KeywordModel->set($controller->data);
 		}
 
 		if(!$this->KeywordModel->save()) {
