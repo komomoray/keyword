@@ -41,7 +41,7 @@ class KeywordHookComponent extends Object {
  * @return void
  * @access public
  */
-	function startup(&$controller) {
+	function startup($controller) {
 
 		if($controller->name == 'Pages') {
 			if($controller->action == 'admin_edit') {
@@ -64,7 +64,7 @@ class KeywordHookComponent extends Object {
  * @return void
  * @access public
  */
-	function beforeRender(&$controller) {
+	function beforeRender($controller) {
 
 		if($controller->name == 'Pages') {
 
@@ -126,7 +126,7 @@ class KeywordHookComponent extends Object {
  * @return void
  * @access public
  */
-	function afterPageAdd(&$controller) {
+	function afterPageAdd($controller) {
 
 		// 固定ページ保存時にエラーがなければ保存処理を実行
 		if(empty($controller->Page->validationErrors)) {
@@ -141,7 +141,7 @@ class KeywordHookComponent extends Object {
  * @return void
  * @access public
  */
-	function afterPageEdit(&$controller) {
+	function afterPageEdit($controller) {
 
 		// 固定ページ保存時にエラーがなければ保存処理を実行
 		if(empty($controller->Page->validationErrors)) {

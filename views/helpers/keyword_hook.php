@@ -24,7 +24,7 @@ class KeywordHookHelper extends AppHelper {
  * @param string $out
  * @return string 
  */
-	function afterFormInput(&$form, $fieldName, $out) {
+	function afterFormInput($form, $fieldName, $out) {
 
 		// 説明文入力欄の下にキーワード入力欄を表示する
 		if($form->params['controller'] == 'pages') {
