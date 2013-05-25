@@ -190,7 +190,7 @@ class KeywordHookComponent extends Object {
 		if($controller->action == 'admin_add') {
 			$controller->data['Keyword']['pages_id'] = $controller->Page->getLastInsertId();
 		} else {
-			$controller->data['Keyword']['pages_id'] = $controller->Page->id;
+			$controller->data['Keyword']['pages_id'] = $controller->data['Page']['id'];
 		}
 
 		if(empty($controller->data['Keyword']['id'])) {
