@@ -84,18 +84,18 @@ class KeywordHookComponent extends Object {
 						'fields' => 'id'
 					));
 					// PC版固定ページのデータを元に、キーワードデータを取得する
+					$judgeSmartPhoneUseKeywordPc = false;
+					$judgeMobileUseKeywordPc = false;
 					if($pageDataPc) {
 						$keywordPc = $this->KeywordModel->findByPagesId($pageDataPc['Page']['id']);
 						if($keywordPc) {
 							// キーワード・データに「スマホ共通利用」指定があれば、そのデータを利用する
 							if($keywordPc['Keyword']['linked_smartphone']) {
-								$controller->viewVars['keywords'] = $keywordPc['Keyword']['keywords'];
-								return;
+								$judgeSmartPhoneUseKeywordPc = true;
 							}
 							// キーワード・データに「モバイル共通利用」指定があれば、そのデータを利用する
 							if($keywordPc['Keyword']['linked_mobile']) {
-								$controller->viewVars['keywords'] = $keywordPc['Keyword']['keywords'];
-								return;
+								$judgeMobileUseKeywordPc = true;
 							}
 						}
 					}
@@ -107,6 +107,21 @@ class KeywordHookComponent extends Object {
 					if(!$param || $param == 'smartphone/' || $param == 'mobile/') {
 						$param = $param . 'index';
 					}
+					
+					$patternMobile = '/^'.Configure::read('BcAgent.mobile.prefix').'\//';
+					$patternSmartphone = '/^'.Configure::read('BcAgent.smartphone.prefix').'\//';
+					if(preg_match($patternMobile, $param)) {
+						if($judgeMobileUseKeywordPc) {
+							$controller->viewVars['keywords'] = $keywordPc['Keyword']['keywords'];
+							return;
+						}
+					} elseif(preg_match($patternSmartphone, $param)) {
+						if($judgeSmartPhoneUseKeywordPc) {
+							$controller->viewVars['keywords'] = $keywordPc['Keyword']['keywords'];
+							return;
+						}
+					}
+					
 					$pageData = $controller->Page->findByUrl('/' . $param, array(
 						'fields' => 'id'
 					));
