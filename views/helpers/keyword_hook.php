@@ -17,24 +17,41 @@ class KeywordHookHelper extends AppHelper {
  */
 	var $registerHooks = array('afterFormInput');
 /**
+ * ビュー
+ * 
+ * @var View 
+ */
+	var $View = null;
+/**
+ * Construct 
+ * 
+ */
+	function __construct() {
+
+		parent::__construct();
+		$this->View = ClassRegistry::getObject('view');
+
+	}
+/**
  * afterFormInput
  * 
  * @param Object $form
  * @param string $fieldName
  * @param string $out
  * @return string 
+ * @access public
  */
-	function afterFormInput(&$form, $fieldName, $out) {
+	function afterFormInput($form, $fieldName, $out) {
 
 		// 説明文入力欄の下にキーワード入力欄を表示する
 		if($form->params['controller'] == 'pages') {
 			if($this->action == 'admin_add' || $this->action == 'admin_edit') {
-				$View =& ClassRegistry::getObject('view');
 				if($fieldName == 'Page.description') {
-					$out = $out . $View->element('admin/keyword_form', array('plugin' => 'keyword'));
+					$out = $out . $this->View->element('admin/keyword_form', array('plugin' => 'keyword'));
 				}
 			}
 		}
+
 		return $out;
 
 	}
