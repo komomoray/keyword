@@ -84,40 +84,36 @@ class KeywordHookComponent extends Object {
 						'fields' => 'id'
 					));
 					// PC版固定ページのデータを元に、キーワードデータを取得する
-					$judgeSmartPhoneUseKeywordPc = false;
-					$judgeMobileUseKeywordPc = false;
 					if($pageDataPc) {
 						$keywordPc = $this->KeywordModel->findByPagesId($pageDataPc['Page']['id']);
 						if($keywordPc) {
 							// キーワード・データに「スマホ共通利用」指定があれば、そのデータを利用する
 							if($keywordPc['Keyword']['linked_smartphone']) {
-								$judgeSmartPhoneUseKeywordPc = true;
 								$controller->viewVars['keywords'] = $keywordPc['Keyword']['keywords'];
+								return;
 							}
 							// キーワード・データに「モバイル共通利用」指定があれば、そのデータを利用する
 							if($keywordPc['Keyword']['linked_mobile']) {
-								$judgeMobileUseKeywordPc = true;
 								$controller->viewVars['keywords'] = $keywordPc['Keyword']['keywords'];
+								return;
 							}
 						}
 					}
 
-					if(!$judgeSmartPhoneUseKeywordPc && !$judgeMobileUseKeywordPc) {
-						// プレフィックスが付いた場合
-						if(Configure::read('BcRequest.agent')) {
-							$param = Configure::read('BcRequest.agentPrefix').'/'.$param;
-						}
-						if(!$param || $param == 'smartphone/' || $param == 'mobile/') {
-							$param = $param . 'index';
-						}
-						$pageData = $controller->Page->findByUrl('/' . $param, array(
-							'fields' => 'id'
-						));
-						if($pageData) {
-							$keyword = $this->KeywordModel->findByPagesId($pageData['Page']['id']);
-							if($keyword) {
-								$controller->viewVars['keywords'] = $keyword['Keyword']['keywords'];
-							}
+					// プレフィックスが付いた場合
+					if(Configure::read('BcRequest.agent')) {
+						$param = Configure::read('BcRequest.agentPrefix').'/'.$param;
+					}
+					if(!$param || $param == 'smartphone/' || $param == 'mobile/') {
+						$param = $param . 'index';
+					}
+					$pageData = $controller->Page->findByUrl('/' . $param, array(
+						'fields' => 'id'
+					));
+					if($pageData) {
+						$keyword = $this->KeywordModel->findByPagesId($pageData['Page']['id']);
+						if($keyword) {
+							$controller->viewVars['keywords'] = $keyword['Keyword']['keywords'];
 						}
 					}
 					
