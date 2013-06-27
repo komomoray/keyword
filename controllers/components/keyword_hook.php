@@ -16,7 +16,7 @@ class KeywordHookComponent extends Object {
  * @access public
  */
 	var $registerHooks = array(
-		'startup', 'beforeRender', 'afterPageAdd', 'afterPageEdit');
+		'startup', 'beforeRender', 'afterPageAdd', 'afterPageEdit', 'initialize');
 /**
  * キーワードモデル
  * 
@@ -33,6 +33,17 @@ class KeywordHookComponent extends Object {
 	function __construct() {
 		parent::__construct();
 		$this->KeywordModel = ClassRegistry::init('Keyword.Keyword');
+	}
+/**
+ * initialize
+ * 
+ * @param Controller $controller 
+ */
+	function initialize($controller) {
+		
+		// Keywordヘルパーの追加
+		$controller->helpers[] = 'Keyword.Keyword';
+		
 	}
 /**
  * startup
@@ -129,6 +140,7 @@ class KeywordHookComponent extends Object {
 						$keyword = $this->KeywordModel->findByPagesId($pageData['Page']['id']);
 						if($keyword) {
 							$controller->viewVars['keywords'] = $keyword['Keyword']['keywords'];
+							$controller->viewVars['keywordsData'] = $keyword['Keyword'];
 						}
 					}
 					

@@ -19,6 +19,7 @@ class KeywordsSchema extends CakeSchema {
 		'id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'key' => 'primary'),
 		'pages_id' => array('type' => 'integer', 'null' => true, 'default' => NULL, 'length' => 8),
 		'keywords' => array('type' => 'text', 'null' => true, 'default' => NULL),
+		'name' => array('type' => 'string', 'null' => true, 'default' => NULL),
 		'linked_smartphone' => array('type' => 'boolean', 'null' => true, 'default' => '0'),
 		'linked_mobile' => array('type' => 'boolean', 'null' => true, 'default' => '0'),
 		'modified' => array('type' => 'datetime', 'null' => true, 'default' => NULL),

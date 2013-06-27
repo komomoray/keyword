@@ -32,4 +32,10 @@
 		<?php endif ?>
 	</div>
 <?php endif ?>
+
+
+<small><?php echo $bcForm->label('Keyword.name', 'H1テキスト') ?></small>
+<?php echo $bcForm->error('Keyword.name') ?>
+<br />
+<?php echo $bcForm->input('Keyword.name', array('type' => 'text', 'size' => 76, 'maxlength' => 255, 'counter' => true)) ?>
 </div>
