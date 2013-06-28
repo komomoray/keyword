@@ -141,6 +141,10 @@ class KeywordHookComponent extends Object {
 						if($keyword) {
 							$controller->viewVars['keywords'] = $keyword['Keyword']['keywords'];
 							$controller->viewVars['keywordsData'] = $keyword['Keyword'];
+						} else {
+							// キーワードデータが存在しない場合でも、ビュー側で変数を引数にしたメソッドを利用しているため送る
+							$keyword['Keyword'] = array();
+							$controller->viewVars['keywordsData'] = $keyword['Keyword'];
 						}
 					}
 					

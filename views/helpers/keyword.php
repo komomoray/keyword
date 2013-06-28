@@ -9,13 +9,6 @@
  */
 class KeywordHelper extends AppHelper {
 /**
- * ヘルパー
- *
- * @var array
- * @access public
- */
-	var $helpers = array('Blog', 'Html');
-/**
  * 「テキスト」を取得する
  *
  * @param array $data
